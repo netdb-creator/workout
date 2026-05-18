@@ -261,8 +261,8 @@ body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-s
 .cal-day.rest-day { background: var(--surface); color: var(--text-muted); border-color: var(--border); cursor: pointer; }
 .cal-day.trained { background: rgba(79,70,229,0.08); border-color: var(--accent2); color: var(--accent2); font-weight: 700; cursor: pointer; }
 .cal-day.trained:active { background: rgba(79,70,229,0.15); }
-.cal-day.today { border-color: var(--accent3) !important; color: var(--accent3); }
-.cal-day.today.trained { background: rgba(79,70,229,0.08); border-color: var(--accent2) !important; color: var(--accent2); }
+.cal-day.today:not(.selected) { border-color: var(--accent3); color: var(--accent3); }
+.cal-day.today.trained:not(.selected) { background: rgba(79,70,229,0.08); border-color: var(--accent3); color: var(--accent2); }
 .cal-day.selected { background: var(--accent2) !important; color: #fff !important; border-color: var(--accent2) !important; }
 .cal-day.future { background:none; border-color:transparent; opacity:0.3; }
 
