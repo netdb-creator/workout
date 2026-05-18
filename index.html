@@ -256,7 +256,7 @@ body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-s
   padding: 4px 2px;
 }
 .cal-day.empty { background: none; }
-.cal-day.rest-day { background: var(--surface); color: var(--text-muted); border-color: var(--border); }
+.cal-day.rest-day { background: var(--surface); color: var(--text-muted); border-color: var(--border); cursor: pointer; }
 .cal-day.trained { background: rgba(79,70,229,0.08); border-color: var(--accent2); color: var(--accent2); font-weight: 700; cursor: pointer; }
 .cal-day.trained:active { background: rgba(79,70,229,0.15); }
 .cal-day.today { border-color: var(--accent3); color: var(--accent3); }
@@ -972,7 +972,7 @@ function renderCalendar() {
       timeHtml = `<span class="cal-day-time">${timeText}</span>`;
     }
 
-    cells.push(`<div class="${cls}" ${isTrained?`onclick="selectCalDay('${ds}')"`:''}>${d}${timeHtml}</div>`);
+    cells.push(`<div class="${cls}" ${isFuture?`onclick="selectCalDay('${ds}')"`:''}>${d}${timeHtml}</div>`);
   }
   document.getElementById('calendar-view').innerHTML=`
     <div class="calendar-nav">
@@ -997,8 +997,20 @@ function renderCalendar() {
 
 function renderCalDetailContent(date) {
   const logs=historyLogs.filter(l=>l.date===date);
-  if(!logs.length) return '<div class="cal-detail-body"><div class="cal-placeholder">記録なし</div></div>';
   const d=new Date(date+'T00:00:00');
+  if(!logs.length) {
+    return `
+      <div class="cal-detail-header">
+        <span class="cal-detail-date">${date} (${WD[d.getDay()]})</span>
+        <div class="cal-detail-actions">
+          <span class="cal-detail-link" onclick="editDay('${date}')" style="color:var(--accent2);border-color:var(--accent2);">＋ 新規登録</span>
+        </div>
+      </div>
+      <div class="cal-detail-body">
+        <div class="cal-placeholder">データがありません</div>
+      </div>
+    `;
+  }
   return `
     <div class="cal-detail-header">
       <span class="cal-detail-date">${date} (${WD[d.getDay()]})</span>
@@ -1022,7 +1034,7 @@ function renderCalDetailContent(date) {
     </div>
   `;
 }
-
+  
 window.selectCalDay = ds=>{selectedCalDate=ds;renderCalendar();};
 window.moveMonth = dir=>{
   calMonth+=dir;
