@@ -972,7 +972,7 @@ function renderCalendar() {
       timeHtml = `<span class="cal-day-time">${timeText}</span>`;
     }
 
-    cells.push(`<div class="${cls}" ${isFuture?`onclick="selectCalDay('${ds}')"`:''}>${d}${timeHtml}</div>`);
+    cells.push(`<div class="${cls}" ${!isFuture?`onclick="selectCalDay('${ds}')"`:''}>${d}${timeHtml}</div>`);
   }
   document.getElementById('calendar-view').innerHTML=`
     <div class="calendar-nav">
