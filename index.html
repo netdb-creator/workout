@@ -6,6 +6,9 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="筋トレログ">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <title>筋トレログ</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -433,6 +436,7 @@ input[type="number"]::-webkit-outer-spin-button { display:none; }
   </header>
   <div class="user-menu" id="userMenu">
     <div class="user-menu-name" id="userMenuName"></div>
+    <div class="user-menu-item" style="color:var(--accent2);" onclick="location.reload()">🔄 再読み込み</div>
     <div class="user-menu-item" onclick="signOut()">ログアウト</div>
   </div>
 
