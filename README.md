@@ -31,4 +31,4 @@
 （画像をここに貼る）
 
 ## URL
-[（GitHub PagesのURL）](https://netdb-creator.github.io/workout/)
+[https://netdb-creator.github.io/workout/](https://netdb-creator.github.io/workout/)
