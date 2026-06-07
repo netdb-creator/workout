@@ -26,6 +26,9 @@
 | AI分析時のトークンコスト増加 | 対象種目の最新10件の履歴のみ送信 |
 | 分析精度不足 | AIから追加記録項目を提案する機能を実装 |
 | ユーザーデータの分離 | Google認証によりユーザーごとにデータを管理 |
+| スマートフォンでの操作性 | ボトムナビゲーション・タップ操作に最適化したUI設計 |
+| ホーム画面への追加対応 | PWA対応によりホーム画面から直接起動可能 |
+| 画面サイズへの対応 | スマートフォン画面幅に最適化したレイアウト |
 
 ## スクリーンショット
 ![ログイン画面](docs/images/login.png)
@@ -37,4 +40,4 @@
 ![種目管理画面](docs/images/manage.png)
 
 ## URL
-[https://netdb-creator.github.io/workout/](https://netdb-creator.github.io/workout/)
+[https://rsm7k2.github.io/workout/](https://rsm7k2.github.io/workout/)
