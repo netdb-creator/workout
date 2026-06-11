@@ -1448,6 +1448,102 @@ window.renderExerciseList = ()=>{
 
 // ===== AI分析機能 =====
 
+// ===== 進行ロジック（ルールベース・決定論的）=====
+// 方式: ダブルプログレッション（レップ範囲の上限到達で増量、未達なら同重量でレップを伸ばす）
+// ▼ここの数値が「対象ユーザー層に合わせて変更する箇所」
+const PROG_CFG = {
+  repRange: [8, 12],             // 目標レップ範囲[下限,上限]。全セットが上限到達で増量
+  incrementKg: 2.5,               // 増量幅(kg)。脚・背中など大筋群は5.0推奨
+  deloadRate: 0.90,             // 連続未達時に落とす割合（0.90 = 10%減）
+  failStreak: 2,               // 何回連続で下限未達ならディロードするか
+  warmupRatios: [0.4, 0.6, 0.8], // メイン重量に対するウォームアップ比率
+  warmupReps:   [8, 5, 3],
+  mainSets: 3,                  // メインのセット数
+};
+
+// 推定1RM（Epley式: 1RM = 重量 × (1 + 回数/30)）
+function est1RM(w, r) {
+  if (!w || r <= 1) return w || 0;
+  return w * (1 + r / 30);
+}
+
+const round2_5 = w => Math.round(w / 2.5) * 2.5;
+
+// 履歴(重量×レップ×セット)から次回プランを決定論的に計算する
+function calcProgression(logs) {
+  if (!logs.length) return null;
+
+  // 各回を要約: 作業重量=最も多く行った重量(同数なら重い方), その重量でのレップ群, 総ボリューム, 推定1RM
+  const sessions = logs.map(({date, exercise}) => {
+    const work = exercise.sets.filter(s => s.weight > 0);
+    if (!work.length) return null;
+    const freq = {};
+    work.forEach(s => { freq[s.weight] = (freq[s.weight] || 0) + 1; });
+    const workWeight = Number(Object.entries(freq).sort((a,b) => b[1]-a[1] || b[0]-a[0])[0][0]);
+    const repsAtWork = work.filter(s => s.weight === workWeight).map(s => s.reps);
+    const volume = work.reduce((sum,s) => sum + s.weight * s.reps, 0);
+    const best1RM = Math.max(...work.map(s => est1RM(s.weight, s.reps)));
+    return { date, workWeight, repsAtWork, volume, best1RM, unit: work[0].unit || 'kg' };
+  }).filter(Boolean);
+  if (!sessions.length) return null;
+
+  const unit = sessions[0].unit;
+  const latest = sessions[0];                 // 新しい順
+  const [lo, hi] = PROG_CFG.repRange;
+  const minRep = Math.min(...latest.repsAtWork);
+  const maxRep = Math.max(...latest.repsAtWork);
+
+  // 同じ作業重量で連続して下限未達が続いている回数
+  let failing = 0;
+  for (const s of sessions) {
+    if (s.workWeight === latest.workWeight && Math.min(...s.repsAtWork) < lo) failing++;
+    else break;
+  }
+
+  let nextWeight, targetReps, reason;
+  if (failing >= PROG_CFG.failStreak) {
+    nextWeight = round2_5(latest.workWeight * PROG_CFG.deloadRate);
+    targetReps = lo;
+    reason = `${latest.workWeight}${unit}で${failing}回連続して下限${lo}回に届かないためディロード（約${Math.round((1-PROG_CFG.deloadRate)*100)}%減）`;
+  } else if (minRep >= hi) {
+    // 全セットが上限到達 → 増量してレップをリセット
+    nextWeight = latest.workWeight + PROG_CFG.incrementKg;
+    targetReps = lo;
+    reason = `全セットが上限${hi}回に到達したため +${PROG_CFG.incrementKg}${unit}（レップは${lo}回から再開）`;
+  } else {
+    // 上限未到達 → 同重量でレップを1回伸ばす
+    nextWeight = latest.workWeight;
+    targetReps = Math.min(hi, maxRep + 1);
+    reason = `上限${hi}回に未到達のため ${latest.workWeight}${unit} を維持し ${targetReps}回を狙う`;
+  }
+
+  // 推移（新→旧）
+  const win = sessions.slice(0, 5);
+  const trend = win.map(s => Math.round(s.best1RM * 10) / 10);
+  const volTrend = win.map(s => Math.round(s.volume));
+
+  // 傾向判定（推定1RM）
+  let trendNote = '';
+  if (trend.length >= 2) {
+    const newest = trend[0], oldest = trend[trend.length - 1];
+    if (newest > oldest) trendNote = `推定1RMは上昇傾向（${oldest}→${newest}${unit}）`;
+    else if (newest < oldest) trendNote = `推定1RMは低下傾向（${oldest}→${newest}${unit}）`;
+    else trendNote = `推定1RMは停滞（${newest}${unit}前後）`;
+  }
+
+  // ※丸めはkg・2.5kgプレート前提。lbの場合は別途調整が必要
+  const warmup = PROG_CFG.warmupRatios.map((ratio, i) => ({
+    set: i + 1, weight: round2_5(nextWeight * ratio), unit, reps: PROG_CFG.warmupReps[i],
+  }));
+  const main = Array.from({length: PROG_CFG.mainSets}, (_, i) => ({
+    set: i + 1, weight: nextWeight, unit, reps: targetReps,
+  }));
+
+  const summary = trendNote ? `${reason}。${trendNote}` : reason;
+
+  return { unit, nextWeight, targetReps, reason, summary, trend, volTrend, warmup, main };
+}
+
 // 対象種目が含まれる日付を新しい順に最大10件抽出
 function getExerciseLogs(exName) {
   const result = [];
@@ -1546,45 +1642,73 @@ window.runAiAnalysis = async () => {
   document.getElementById('aiRunBtn').disabled = true;
   window._aiLastResult = null;
 
-  // プロンプト用データ整形
-  const dataText = logs.map(({ date, exercise }) => {
-    const setsText = exercise.sets.map((s,i) =>
-      `  セット${i+1}: 重量=${s.weight}${s.unit||'kg'} 回数=${s.reps}回${s.memo ? ` メモ="${s.memo}"` : ''}`
-    ).join('\n');
-    return `【${date}】\n${setsText}`;
-  }).join('\n\n');
+  // ===== 1. 数値はルールベースで決定論的に計算 =====
+  const calc = calcProgression(logs);
+  if (!calc) {
+    document.getElementById('aiLoading').classList.remove('visible');
+    const errEl = document.getElementById('aiError');
+    errEl.textContent = 'エラー: 有効な重量データがありません';
+    errEl.classList.add('visible');
+    document.getElementById('aiRunBtn').disabled = false;
+    return;
+  }
 
-  const prompt = `あなたはパーソナルトレーナーです。以下は「${exName}」のトレーニング履歴（最新${logs.length}回分、新しい順）です。
+  // ===== 2. メモ（自然文）だけを抽出 =====
+  const memoText = logs.map(({ date, exercise }) => {
+    const memos = exercise.sets.map(s => s.memo).filter(Boolean);
+    return memos.length ? `【${date}】${memos.join(' / ')}` : null;
+  }).filter(Boolean).join('\n');
 
-${dataText}
+  // ===== 3. メモが無ければLLMを呼ばず、計算結果だけで表示（APIコスト節約）=====
+  if (!memoText) {
+    const parsed = {
+      summary: calc.summary,
+      warmup: calc.warmup.map(s => ({ ...s, note: '' })),
+      main:   calc.main.map(s => ({ ...s, note: calc.reason })),
+      tips: ['痛み・違和感の有無', 'セット間インターバル(秒)', '睡眠・体調・疲労度'],
+    };
+    window._aiLastResult = { exName, parsed };
+    renderAiResult(exName, parsed, logs.length);
+    document.getElementById('aiRunBtn').disabled = false;
+    return;
+  }
 
-上記の履歴を分析して、今日のトレーニングプランを提案してください。
-必ず以下のJSON形式のみで回答してください。説明文や前置き・後置きは不要です。
+  // ===== 4. メモがある場合のみLLMへ。数値は計算結果に固定し、解釈と安全判断のみ任せる =====
+  const prompt = `あなたはパーソナルトレーナーです。「${exName}」について、ルールで計算済みの今日の提案と過去のメモを渡します。
+
+【計算済みの提案（数値はこれを基準とする）】
+次回の作業重量: ${calc.nextWeight}${calc.unit}（${calc.reason}）
+目標回数: ${calc.targetReps}回
+ウォームアップ: ${calc.warmup.map(s=>`${s.weight}${s.unit}×${s.reps}`).join(', ')}
+メイン: ${calc.main.map(s=>`${s.weight}${s.unit}×${s.reps}`).join(', ')}
+推定1RM推移(新→旧): ${calc.trend.join(' → ')}
+総ボリューム推移(新→旧): ${calc.volTrend.join(' → ')}
+
+【過去のメモ】
+${memoText}
+
+以下のJSON形式のみで回答してください。説明文や前置き・後置きは不要です。
 
 {
-  "summary": "過去データの傾向を1〜2文で説明",
+  "summary": "1RM推移とメモを踏まえた傾向を1〜2文で説明",
   "warmup": [
-    {"set": 1, "weight": 数値, "unit": "kg", "reps": 数値, "note": "短いコメント"},
-    {"set": 2, "weight": 数値, "unit": "kg", "reps": 数値, "note": "短いコメント"}
+    {"set": 1, "weight": 数値, "unit": "${calc.unit}", "reps": 数値, "note": "短いコメント"}
   ],
   "main": [
-    {"set": 1, "weight": 数値, "unit": "kg", "reps": 数値, "note": "短いコメント"},
-    {"set": 2, "weight": 数値, "unit": "kg", "reps": 数値, "note": "短いコメント"},
-    {"set": 3, "weight": 数値, "unit": "kg", "reps": 数値, "note": "短いコメント"}
+    {"set": 1, "weight": 数値, "unit": "${calc.unit}", "reps": 数値, "note": "短いコメント"}
   ],
   "tips": [
-    "今後のメモに追加すると分析精度が上がる情報1",
-    "今後のメモに追加すると分析精度が上がる情報2",
-    "今後のメモに追加すると分析精度が上がる情報3"
+    "今後のメモに追加すると分析精度が上がる情報を3つ"
   ]
 }
 
-条件:
-- warmupは2〜3セット。メインの50〜70%の重量・高回数で設定。
-- mainは3〜4セット。過去の最高重量を基準に、漸進的に重量を上げる提案をする。
-- 回数はrepsフィールドに数値で入れること（例: 10）。
-- tipsは過去のメモにない、かつ分析に役立つ具体的な情報（例：体調、睡眠、インターバル秒数など）を3〜4個挙げること。
-- unitは記録のunitに合わせること（kgまたはlb）。`;
+ルール:
+- weightとrepsは原則「計算済みの提案」の数値をそのまま使うこと。
+- メモに痛み・違和感・フォーム崩れ・体調不良を示す記述がある場合のみ、重量を据え置き/軽減し、その理由をsummaryに必ず明記すること。
+- 数値を勝手に増やさないこと。
+- warmup・mainのセット数は計算済みの提案と同じにすること。
+- noteには各セットのメモを踏まえた具体的アドバイスを書くこと。
+- tipsは過去のメモに無く、分析に役立つ具体的情報を3つ挙げること。`;
 
   // ★ 自分のCloudflare WorkersのURLに変更すること
   const WORKER_URL = 'https://solitary-wood-d1f1.chat-gpt-senyou3.workers.dev';
