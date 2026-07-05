@@ -184,10 +184,6 @@ body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-s
 .save-btn:active:not(:disabled) { transform: scale(0.99); }
 
 /* ===== 履歴ページ ===== */
-.view-toggle { display: flex; background: var(--surface2); border-radius: 10px; padding: 3px; margin-bottom: 16px; gap: 3px; }
-.view-toggle-btn { flex: 1; padding: 9px; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; background: none; color: var(--text-muted); transition: all 0.2s; font-family: 'DM Sans', sans-serif; }
-.view-toggle-btn.active { background: var(--surface); color: var(--text); box-shadow: var(--shadow); }
-
 .calendar-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
 .cal-month { font-family: 'DM Mono', monospace; font-size: 15px; font-weight: 500; color: var(--text); }
 .cal-nav-btn { background: var(--surface); border: 1px solid var(--border); color: var(--text); width: 34px; height: 34px; border-radius: 8px; font-size: 17px; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow); }
@@ -212,7 +208,7 @@ body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-s
 .cal-day-time { font-size: 6.5px; font-family: 'DM Mono', monospace; color: var(--accent2); line-height: 1.2; text-align: center; margin-top: 2px; white-space: nowrap; letter-spacing: -0.3px; opacity: 0.85; }
 .cal-day.selected .cal-day-time { color: rgba(255,255,255,0.85); }
 
-.cal-detail { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); overflow: hidden; box-shadow: var(--shadow); }
+.cal-detail { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); overflow: hidden; box-shadow: var(--shadow); scroll-margin-top: 16px; }
 .cal-detail-header { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; border-bottom: 1px solid var(--border); background: var(--surface2); }
 .cal-detail-date { font-family: 'DM Mono', monospace; font-size: 13px; font-weight: 500; color: var(--text); }
 .cal-detail-actions { display: flex; gap: 8px; }
@@ -223,21 +219,6 @@ body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-s
 .cal-detail-body { padding: 12px 14px; }
 .cal-placeholder { color: var(--text-muted); font-size: 13px; text-align: center; padding: 24px 0; }
 
-.history-day { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); margin-bottom: 10px; overflow: hidden; scroll-margin-top: 16px; box-shadow: var(--shadow); }
-.history-day.highlight { border-color: var(--accent2); box-shadow: 0 0 0 2px rgba(79,70,229,0.2); }
-.history-day-header { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; cursor: pointer; background: var(--surface2); }
-.history-day-header:active { background: var(--surface3); }
-.history-day-date { font-family: 'DM Mono', monospace; font-size: 13px; font-weight: 500; color: var(--text); }
-.history-day-meta { font-size: 11px; color: var(--text-muted); display: flex; gap: 8px; align-items: center; font-weight: 500; }
-.history-body { display: none; }
-.history-body.open { display: block; }
-
-.history-day-actions { display: flex; gap: 8px; padding: 10px 14px; border-bottom: 1px solid var(--border); background: rgba(79,70,229,0.03); }
-.btn-edit-day { flex: 1; background: var(--accent-orange); color: #fff; border: none; border-radius: 7px; padding: 8px 14px; font-size: 12px; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; display: flex; align-items: center; justify-content: center; gap: 6px; }
-.btn-edit-day:active { opacity: 0.85; }
-.btn-delete-log { background: none; border: 1.5px solid var(--accent-red); color: var(--accent-red); border-radius: 7px; width: 36px; height: 30px; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-.btn-delete-log:active { background: rgba(220,38,38,0.08); }
-
 .history-ex { border-bottom: 1px solid var(--border); }
 .history-ex:last-of-type { border-bottom: none; }
 .history-ex-header { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 10px; padding: 10px 14px 6px; }
@@ -247,12 +228,8 @@ body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-s
 .set-chip.memo-chip { border-color: var(--accent2); color: var(--accent2); }
 .history-memo-text { font-size:11px; color:var(--text-sub); margin:0 14px 8px; padding:6px 10px; background:rgba(79,70,229,0.05); border-radius:6px; border-left:2px solid var(--accent2); }
 
-.chevron { font-size:12px; transition:transform 0.2s; color:var(--text-muted); }
-.chevron.open { transform: rotate(90deg); }
-
 .history-ex-delete { width: 30px; height: 30px; border: 1.5px solid rgba(220,38,38,0.35); background: rgba(220,38,38,0.04); color: var(--accent-red); border-radius: 999px; display: inline-flex; align-items: center; justify-content: center; font-size: 18px; line-height: 1; font-weight: 500; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: background 0.15s, border-color 0.15s, transform 0.15s; }
 .history-ex-delete:active { background: rgba(220,38,38,0.12); border-color: var(--accent-red); transform: scale(0.94); }
-.history-log-delete-row { display: none; }
 
 /* ===== 種目管理 ===== */
 .ex-manage-search { width:100%; background:var(--surface); border:1.5px solid var(--border); border-radius:var(--r); color:var(--text); font-size:14px; font-family:'DM Sans',sans-serif; padding:12px 14px; outline:none; margin-bottom:14px; box-shadow:var(--shadow); }
@@ -267,10 +244,14 @@ body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-s
 .category-section { margin-bottom:20px; }
 .category-label { font-family:'DM Mono',monospace; font-size:10px; font-weight:500; color:var(--accent2); letter-spacing:2px; text-transform:uppercase; padding:0 4px; margin-bottom:8px; display:flex; align-items:center; gap:8px; }
 .category-label::after { content:''; flex:1; height:1px; background:var(--border); }
-.ex-item { display:flex; align-items:center; justify-content:space-between; padding:12px 14px; background:var(--surface); border:1px solid var(--border); border-radius:var(--r-sm); margin-bottom:6px; box-shadow:var(--shadow); }
-.ex-item-name { font-size:14px; font-weight:500; }
+.ex-item { display:flex; align-items:center; justify-content:space-between; padding:12px 14px; background:var(--surface); border:1px solid var(--border); border-radius:var(--r-sm); margin-bottom:6px; box-shadow:var(--shadow); gap: 10px; }
+.ex-item-name { font-size:14px; font-weight:500; flex: 1; min-width: 0; }
+.ex-item-right { display:flex; align-items:center; gap:10px; flex-shrink:0; }
 .ex-item-del { background:none; border:1.5px solid var(--accent-red); color:var(--accent-red); border-radius:6px; padding:4px 12px; font-size:12px; font-weight:600; cursor:pointer; font-family:'DM Sans',sans-serif; }
 .ex-item-del:disabled { color:var(--text-muted); border-color:var(--border); cursor:default; }
+.ai-toggle { display:flex; align-items:center; gap:5px; font-size:10px; font-weight:600; color:var(--text-muted); cursor:pointer; letter-spacing:0.3px; white-space: nowrap; }
+.ai-toggle input[type="checkbox"] { width:15px; height:15px; accent-color: var(--accent-ai); cursor:pointer; }
+.ai-toggle.on { color: var(--accent-ai); }
 
 /* ===== 共通 ===== */
 .section-title { font-family:'DM Mono',monospace; font-size:11px; font-weight:500; color:var(--text-muted); letter-spacing:1.5px; text-transform:uppercase; margin-bottom:14px; }
@@ -420,7 +401,7 @@ input[type="number"]::-webkit-outer-spin-button { display:none; }
 .ai-set-cards { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
 .ai-set-card {
   display: grid;
-  grid-template-columns: 28px 1fr 1fr 1fr;
+  grid-template-columns: 28px 1fr 1fr;
   gap: 8px;
   align-items: center;
   background: var(--surface2);
@@ -622,12 +603,7 @@ input[type="number"]::-webkit-outer-spin-button { display:none; }
 
     <!-- 履歴 -->
     <div class="page" id="pg-history">
-      <div class="view-toggle">
-        <button class="view-toggle-btn active" id="btn-calendar" onclick="setView('calendar')">📅 カレンダー</button>
-        <button class="view-toggle-btn" id="btn-list" onclick="setView('list')">📋 リスト</button>
-      </div>
       <div id="calendar-view"></div>
-      <div id="list-view" style="display:none"></div>
     </div>
 
     <!-- 種目 -->
@@ -762,7 +738,7 @@ input[type="number"]::-webkit-outer-spin-button { display:none; }
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
-import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc, query, orderBy, where } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
+import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc, setDoc, query, orderBy, where } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut as fbSignOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
 
 const firebaseConfig = {
@@ -780,8 +756,10 @@ const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
 const COL = "workout_logs";
 const CUSTOM_EX_COL = "custom_exercises";
+const AI_SETTINGS_COL = "ai_exercise_settings";
 function customExerciseCollectionRef() { return collection(db, 'users', currentUser.uid, CUSTOM_EX_COL); }
 function customExerciseDocRef(id) { return doc(db, 'users', currentUser.uid, CUSTOM_EX_COL, id); }
+function aiSettingDocRef(name) { return doc(db, 'users', currentUser.uid, AI_SETTINGS_COL, encodeURIComponent(name)); }
 let currentUser = null;
 
 // ===== 認証 =====
@@ -813,7 +791,9 @@ onAuthStateChanged(auth, async user => {
     document.getElementById('userMenuName').textContent = user.displayName || user.email;
     historyLogs = [];
     customExercises = [];
+    aiExerciseSettings = {};
     await loadCustomExercises(true);
+    await loadAiExerciseSettings(true);
     await migrateLocalCustomExercisesToFirestore();
     initRecord();
     setSyncStatus('ok');
@@ -822,6 +802,7 @@ onAuthStateChanged(auth, async user => {
     document.getElementById('appScreen').classList.remove('visible');
     historyLogs = [];
     customExercises = [];
+    aiExerciseSettings = {};
   }
 });
 
@@ -838,6 +819,7 @@ const DEFAULT_EX = {
   'その他':['フェイスプル','シュラッグ','ヒップスラスト'],
 };
 let customExercises = [];
+let aiExerciseSettings = {};
 
 async function loadCustomExercises(force=false) {
   if (!currentUser) { customExercises = []; return; }
@@ -860,6 +842,47 @@ async function loadCustomExercises(force=false) {
     showToast('種目データの取得に失敗しました', 'ng');
   }
 }
+
+// 種目ごとのAI分析対象ON/OFF設定を読み込む（デフォルト種目・カスタム種目の両方に対応）
+async function loadAiExerciseSettings(force=false) {
+  if (!currentUser) { aiExerciseSettings = {}; return; }
+  if (!force && Object.keys(aiExerciseSettings).length > 0) return;
+  try {
+    const snap = await getDocs(collection(db, 'users', currentUser.uid, AI_SETTINGS_COL));
+    aiExerciseSettings = {};
+    snap.forEach(d => {
+      const data = d.data();
+      if (data && data.name) aiExerciseSettings[data.name] = { enabled: data.aiEnabled !== false };
+    });
+    setSyncStatus('ok');
+  } catch(e) {
+    aiExerciseSettings = {};
+    setSyncStatus('err');
+  }
+}
+
+// 設定が無い種目はデフォルトでAI分析対象（true）とみなす
+function isAiEnabledForExercise(name) {
+  const s = aiExerciseSettings[name];
+  return s ? s.enabled : true;
+}
+
+window.toggleAiExerciseEnabled = async (name, enabled) => {
+  if (!currentUser) return;
+  const prev = aiExerciseSettings[name] ? aiExerciseSettings[name].enabled : true;
+  aiExerciseSettings[name] = { enabled };
+  try {
+    await setDoc(aiSettingDocRef(name), {
+      uid: currentUser.uid, name, aiEnabled: enabled, updatedAt: new Date().toISOString()
+    }, { merge: true });
+    setSyncStatus('ok');
+  } catch(e) {
+    aiExerciseSettings[name] = { enabled: prev };
+    showToast('設定の保存に失敗しました', 'ng');
+    setSyncStatus('err');
+    renderExerciseList();
+  }
+};
 
 async function migrateLocalCustomExercisesToFirestore() {
   if (!currentUser) return;
@@ -949,8 +972,6 @@ let exercises = [];
 let historyLogs = [];
 let calYear, calMonth;
 let selectedCalDate = null;
-let currentView = 'calendar';
-let skipNextHistoryListBottomScroll = false;
 let editingDocId = null;
 let endTimeManuallyEdited = false;  // 当回の保存操作で終了時刻を手動編集したか
 let loadedEndTime = '';             // 読み込んだ既存レコードの終了時刻
@@ -982,11 +1003,12 @@ window.switchPage = async page => {
   });
   if(page==='history') {
     await loadHistory();
-    if(currentView==='calendar') renderCalendar(); else renderHistoryList();
+    renderCalendar();
   }
-  if(page==='exercises') { await loadCustomExercises(); renderExerciseList(); }
+  if(page==='exercises') { await loadCustomExercises(); await loadAiExerciseSettings(); renderExerciseList(); }
   if(page==='ai') {
     await loadHistory();
+    await loadAiExerciseSettings();
     renderAiExerciseSelect();
   }
 };
@@ -1215,7 +1237,7 @@ window.saveWorkout = async () => {
     loadedEndTime = endTime; loadedEndTimeManual = endTimeManual; endTimeManuallyEdited = false;
     await loadHistory(true);
     await switchPage('history');
-    openSavedDateInHistoryList(date);
+    openSavedDateInCalendar(date);
   } catch(e){
     showToast('保存に失敗しました','ng'); setSyncStatus('err');
   } finally {btn.disabled=false;btn.textContent='保存する';}
@@ -1236,15 +1258,6 @@ async function loadHistory(force=false) {
     showToast('履歴データの取得に失敗しました','ng');
   }
 }
-
-window.setView = v => {
-  currentView=v;
-  document.getElementById('btn-calendar').classList.toggle('active',v==='calendar');
-  document.getElementById('btn-list').classList.toggle('active',v==='list');
-  document.getElementById('calendar-view').style.display=v==='calendar'?'':'none';
-  document.getElementById('list-view').style.display=v==='list'?'':'none';
-  if(v==='calendar') renderCalendar(); else renderHistoryList();
-};
 
 window.editDay = async date => {
   switchPage('record');
@@ -1338,13 +1351,15 @@ function renderCalDetailContent(date) {
       <span class="cal-detail-date">${date} (${WD[d.getDay()]})</span>
       <div class="cal-detail-actions">
         <span class="cal-detail-edit" onclick="editDay('${date}')">✏️ 編集</span>
-        <span class="cal-detail-link" onclick="jumpToHistory('${date}')">リスト →</span>
       </div>
     </div>
     <div class="cal-detail-body">
-      ${logs.flatMap(l=>l.exercises.map(ex=>({ex,logId:l.id}))).map(({ex})=>`
+      ${logs.flatMap(l=>l.exercises.map((ex,exIdx)=>({ex,logId:l.id,exIdx}))).map(({ex,logId,exIdx})=>`
         <div class="history-ex" style="margin-bottom:10px;">
-          <div class="history-ex-header"><span class="history-ex-name">${ex.name}</span></div>
+          <div class="history-ex-header">
+            <span class="history-ex-name">${ex.name}</span>
+            <button class="history-ex-delete" onclick="event.stopPropagation(); delExercise('${logId}', ${exIdx})" title="この種目を削除">×</button>
+          </div>
           <div class="history-sets">
             ${ex.sets.map((s,i)=>`<div class="set-chip ${s.memo?'memo-chip':''}">${i+1}: ${s.weight}${s.unit||'kg'}×${s.reps}</div>`).join('')}
           </div>
@@ -1362,112 +1377,19 @@ window.moveMonth = dir=>{
   if(calMonth<0){calMonth=11;calYear--;}
   renderCalendar();
 };
-window.jumpToHistory = date=>{
-  setView('list');
-  setTimeout(()=>{
-    const el=document.getElementById(`hday-${date}`);
-    if(!el) return;
-    el.classList.add('highlight');
-    setTimeout(()=>el.classList.remove('highlight'),2000);
-    const body=document.getElementById(`hb-${date}`),chev=document.getElementById(`chev-${date}`);
-    if(body&&!body.classList.contains('open')){body.classList.add('open');if(chev)chev.classList.add('open');}
-    el.scrollIntoView({behavior:'smooth',block:'start'});
-  },100);
-};
 
-function openSavedDateInHistoryList(date) {
-  currentView = 'list';
-  document.getElementById('btn-calendar').classList.remove('active');
-  document.getElementById('btn-list').classList.add('active');
-  document.getElementById('calendar-view').style.display='none';
-  document.getElementById('list-view').style.display='';
-  skipNextHistoryListBottomScroll = true;
-  renderHistoryList();
-  setTimeout(()=>{
-    const el=document.getElementById(`hday-${date}`);
-    const body=document.getElementById(`hb-${date}`);
-    const chev=document.getElementById(`chev-${date}`);
-    if(body&&!body.classList.contains('open')) { body.classList.add('open'); if(chev) chev.classList.add('open'); }
-    if(el) { el.classList.add('highlight'); setTimeout(()=>el.classList.remove('highlight'),1500); el.scrollIntoView({behavior:'smooth',block:'start'}); }
-  },100);
-}
-
-function openDateInHistoryList(date) {
-  currentView = 'list';
-  document.getElementById('btn-calendar').classList.remove('active');
-  document.getElementById('btn-list').classList.add('active');
-  document.getElementById('calendar-view').style.display='none';
-  document.getElementById('list-view').style.display='';
-  skipNextHistoryListBottomScroll = true;
-  renderHistoryList();
+// 保存直後に対象日をカレンダー上で選択・表示する
+function openSavedDateInCalendar(date) {
+  const d = new Date(date+'T00:00:00');
+  calYear = d.getFullYear();
+  calMonth = d.getMonth();
+  selectedCalDate = date;
+  renderCalendar();
   requestAnimationFrame(() => {
-    requestAnimationFrame(() => {
-      const el = document.getElementById(`hday-${date}`);
-      if (!el) return;
-      const body = document.getElementById(`hb-${date}`), chev = document.getElementById(`chev-${date}`);
-      if (body && !body.classList.contains('open')) { body.classList.add('open'); }
-      if (chev) { chev.classList.add('open'); }
-      el.classList.add('highlight');
-      setTimeout(() => el.classList.remove('highlight'), 1500);
-      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    });
+    const el = document.getElementById('calDetail');
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
   });
 }
-
-function renderHistoryList() {
-  const byDate={};
-  historyLogs.forEach(l=>{if(!byDate[l.date])byDate[l.date]=[];byDate[l.date].push(l);});
-  const dates=Object.keys(byDate).sort((a,b)=>a.localeCompare(b));
-  if(!dates.length){document.getElementById('list-view').innerHTML='<div class="empty-msg">記録がありません</div>';return;}
-  document.getElementById('list-view').innerHTML=dates.map(date=>{
-    const logs=byDate[date];
-    const allEx=logs.flatMap(l=>l.exercises);
-    const totalSets=allEx.reduce((s,ex)=>s+ex.sets.length,0);
-    const d=new Date(date+'T00:00:00');
-    const exWithId=logs.flatMap(l=>l.exercises.map((ex,ei)=>({ex,logId:l.id,exIdx:ei})));
-    return `
-      <div class="history-day" id="hday-${date}">
-        <div class="history-day-header" onclick="toggleHist('${date}')">
-          <span class="history-day-date">${date} (${WD[d.getDay()]})</span>
-          <span class="history-day-meta"><span>${allEx.length}種目</span><span>${totalSets}set</span><span class="chevron" id="chev-${date}">›</span></span>
-        </div>
-        <div class="history-body" id="hb-${date}">
-          <div class="history-day-actions">
-            <button class="btn-edit-day" onclick="editDay('${date}')">✏️ この日を編集</button>
-          </div>
-          ${exWithId.map(({ex,logId,exIdx})=>`
-            <div class="history-ex">
-              <div class="history-ex-header">
-                <span class="history-ex-name">${ex.name}</span>
-                <button class="history-ex-delete" onclick="event.stopPropagation(); delExercise('${logId}', ${exIdx})" title="この種目を削除">×</button>
-              </div>
-              <div class="history-sets">
-                ${ex.sets.map((s,i)=>`<div class="set-chip ${s.memo?'memo-chip':''}">${i+1}: ${s.weight}${s.unit||'kg'}×${s.reps}</div>`).join('')}
-              </div>
-              ${ex.sets.filter(s=>s.memo).map(s=>`<div class="history-memo-text">💬 ${s.memo}</div>`).join('')}
-            </div>
-          `).join('')}
-          <div class="history-log-delete-row">
-            ${logs.map(l=>`<button onclick="delLog('${l.id}')">×</button>`).join('')}
-          </div>
-        </div>
-      </div>
-    `;
-  }).join('');
-  if (!skipNextHistoryListBottomScroll) {
-    requestAnimationFrame(() => {
-      const page = document.getElementById('pg-history');
-      page.scrollTop = page.scrollHeight;
-    });
-  }
-  skipNextHistoryListBottomScroll = false;
-}
-
-window.toggleHist = date=>{
-  const body=document.getElementById(`hb-${date}`),chev=document.getElementById(`chev-${date}`);
-  const isOpen=body.classList.toggle('open');
-  if(chev) chev.classList.toggle('open',isOpen);
-};
 
 window.delExercise = async (logId, exIdx)=>{
   const log = historyLogs.find(l=>l.id===logId);
@@ -1482,7 +1404,7 @@ window.delExercise = async (logId, exIdx)=>{
     await loadHistory(true);
     if(selectedCalDate===deletedDate && !historyLogs.some(l=>l.date===deletedDate)) selectedCalDate=null;
     showToast('削除しました','ok');
-    if(currentView==='calendar') renderCalendar(); else openDateInHistoryList(deletedDate);
+    renderCalendar();
   } catch(e) { showToast('削除に失敗しました','ng'); setSyncStatus('err'); }
 };
 
@@ -1495,9 +1417,7 @@ window.delLog = async id=>{
     await loadHistory(true);
     if(deletedDate && selectedCalDate===deletedDate && !historyLogs.some(l=>l.date===deletedDate)) selectedCalDate=null;
     showToast('削除しました','ok');
-    if(currentView==='calendar') renderCalendar();
-    else if(deletedDate) openDateInHistoryList(deletedDate);
-    else renderHistoryList();
+    renderCalendar();
   } catch(e){ showToast('削除に失敗しました','ng'); setSyncStatus('err'); }
 };
 
@@ -1526,6 +1446,7 @@ window.deleteCustomExercise = async id=>{
   try {
     await deleteDoc(customExerciseDocRef(id));
     customExercises = customExercises.filter(e=>e.id!==id);
+    try { await deleteDoc(aiSettingDocRef(target.name)); delete aiExerciseSettings[target.name]; } catch(e2) {}
     showToast('削除しました','ok');
     setSyncStatus('ok');
     renderExerciseList();
@@ -1542,12 +1463,22 @@ window.renderExerciseList = ()=>{
     return `
       <div class="category-section">
         <div class="category-label">${cat}</div>
-        ${items.map(name=>`
+        ${items.map(name=>{
+          const aiOn = isAiEnabledForExercise(name);
+          const safeName = name.replace(/'/g,"\\'");
+          return `
           <div class="ex-item">
             <span class="ex-item-name">${name}</span>
-            ${customByName.has(name)?`<button class="ex-item-del" onclick="deleteCustomExercise('${customByName.get(name).id}')">削除</button>`:`<button class="ex-item-del" disabled>固定</button>`}
+            <div class="ex-item-right">
+              <label class="ai-toggle ${aiOn?'on':''}">
+                <input type="checkbox" ${aiOn?'checked':''} onchange="toggleAiExerciseEnabled('${safeName}', this.checked)">
+                AI分析
+              </label>
+              ${customByName.has(name)?`<button class="ex-item-del" onclick="deleteCustomExercise('${customByName.get(name).id}')">削除</button>`:`<button class="ex-item-del" disabled>固定</button>`}
+            </div>
           </div>
-        `).join('')}
+        `;
+        }).join('')}
       </div>
     `;
   }).join('');
@@ -1666,7 +1597,7 @@ function getExerciseLogs(exName) {
   return result; // 新しい順のまま返す
 }
 
-// AI分析ページの種目プルダウンを生成
+// AI分析ページの種目プルダウンを生成（AI分析OFFに設定された種目は除外）
 function renderAiExerciseSelect() {
   // historyLogsに登場した種目名を抽出（回数の多い順）
   const exCount = {};
@@ -1675,7 +1606,10 @@ function renderAiExerciseSelect() {
       if (ex.name) exCount[ex.name] = (exCount[ex.name] || 0) + 1;
     });
   });
-  const sortedEx = Object.entries(exCount).sort((a,b) => b[1]-a[1]).map(e => e[0]);
+  const sortedEx = Object.entries(exCount)
+    .filter(([name]) => isAiEnabledForExercise(name))
+    .sort((a,b) => b[1]-a[1])
+    .map(e => e[0]);
   const sel = document.getElementById('aiExSelect');
   sel.innerHTML = '<option value="">-- 種目を選択してください --</option>';
   sortedEx.forEach(name => {
@@ -1794,10 +1728,10 @@ ${setDetail}
 {
   "summary": "推定1RM・ボリューム推移とメモを踏まえた傾向を1〜2文で説明",
   "warmup": [
-    {"set": 1, "weight": 数値, "unit": "${calc.unit}", "reps": 数値, "note": "短いコメント"}
+    {"set": 1, "weight": 数値, "unit": "${calc.unit}", "reps": 数値}
   ],
   "main": [
-    {"set": 1, "weight": 数値, "unit": "${calc.unit}", "reps": 数値, "note": "短いコメント"}
+    {"set": 1, "weight": 数値, "unit": "${calc.unit}", "reps": 数値}
   ],
   "tips": [
     "今後メモに残すと分析精度が上がる情報を3つ"
@@ -1809,7 +1743,6 @@ ${setDetail}
 - メモに痛み・違和感・フォーム崩れ・体調不良を示す記述がある場合のみ、重量を据え置き/軽減し、その理由をsummaryに必ず明記すること。
 - 数値を勝手に増やさないこと。
 - warmup・mainのセット数は計算済みの提案と同じにすること。
-- noteには各セットの記録を踏まえた具体的アドバイスを書くこと。
 - tipsでは「セット間インターバル(休憩秒数)」と「ウォームアップ/メインの区分」を提案しないこと。これらは記録側で構造化済みのため。代わりにRPE/RIR(限界まであと何回か)・痛みや違和感・睡眠/体調/疲労度など、まだ記録されていない有用な情報を優先して挙げること。`;
 
   // ★ 自分のCloudflare WorkersのURLに変更すること
@@ -1874,7 +1807,7 @@ function renderAiResult(exName, parsed, dataCount) {
   const mainSubtitle = document.querySelector('.ai-result-section.main .ai-result-section-subtitle');
   if (mainSubtitle && parsed.summary) mainSubtitle.textContent = parsed.summary;
 
-  // ウォームアップカード
+  // ウォームアップカード（重量・回数のみ表示）
   const warmupCards = document.getElementById('warmupCards');
   warmupCards.innerHTML = (parsed.warmup || []).map(s => `
     <div class="ai-set-card">
@@ -1887,14 +1820,10 @@ function renderAiResult(exName, parsed, dataCount) {
         <div class="ai-set-card-label">回数</div>
         <div class="ai-set-card-value">${s.reps}<span class="ai-set-card-unit">回</span></div>
       </div>
-      <div class="ai-set-card-field" style="grid-column:span 1;">
-        <div class="ai-set-card-label">メモ</div>
-        <div style="font-size:11px;color:var(--text-sub);line-height:1.4;">${s.note||''}</div>
-      </div>
     </div>
   `).join('');
 
-  // メインカード
+  // メインカード（重量・回数のみ表示）
   const mainCards = document.getElementById('mainCards');
   mainCards.innerHTML = (parsed.main || []).map(s => `
     <div class="ai-set-card">
@@ -1906,10 +1835,6 @@ function renderAiResult(exName, parsed, dataCount) {
       <div class="ai-set-card-field">
         <div class="ai-set-card-label">回数</div>
         <div class="ai-set-card-value">${s.reps}<span class="ai-set-card-unit">回</span></div>
-      </div>
-      <div class="ai-set-card-field">
-        <div class="ai-set-card-label">メモ</div>
-        <div style="font-size:11px;color:var(--text-sub);line-height:1.4;">${s.note||''}</div>
       </div>
     </div>
   `).join('');
@@ -1967,7 +1892,7 @@ window.addAiResultToRecord = async () => {
       weight: s.weight,
       reps: s.reps,
       unit: s.unit || 'kg',
-      memo: s.note || '',
+      memo: '',
       type: 'warmup',
       restSec: ''
     })),
@@ -1975,7 +1900,7 @@ window.addAiResultToRecord = async () => {
       weight: s.weight,
       reps: s.reps,
       unit: s.unit || 'kg',
-      memo: s.note || '',
+      memo: '',
       type: 'main',
       restSec: ''
     }))
