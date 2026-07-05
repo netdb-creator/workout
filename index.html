@@ -1656,9 +1656,11 @@ function renderAiDataPreview(logs) {
   const d = new Date();
   rows.innerHTML = logs.map(({ date, exercise }) => {
     const setsSummary = exercise.sets.map((s,i) => {
-      const tag = (s.type==='warmup') ? '🔥' : '';
-      const rest = (s.restSec!=null && s.restSec!=='') ? ` ⏱${s.restSec}s` : '';
-      return `${tag}${i+1}:${s.weight}${s.unit||'kg'}×${s.reps}${rest}`;
+      const isWarmup = s.type === 'warmup';
+      const tag = isWarmup ? '🔥' : '';
+      // 表示のみの変更: ウォームアップの重量とインターバル(休憩秒数)は非表示。AIへ渡すデータ(setDetail)には影響しない
+      if (isWarmup) return `${tag}${i+1}:${s.reps}回`;
+      return `${tag}${i+1}:${s.weight}${s.unit||'kg'}×${s.reps}`;
     }).join('　');
     return `
       <div class="ai-data-row">
