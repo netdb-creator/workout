@@ -1658,8 +1658,7 @@ function renderAiDataPreview(logs) {
     const setsSummary = exercise.sets.map((s,i) => {
       const tag = (s.type==='warmup') ? '🔥' : '';
       const rest = (s.restSec!=null && s.restSec!=='') ? ` ⏱${s.restSec}s` : '';
-      const memo = s.memo ? ` 💬${s.memo}` : '';
-      return `${tag}${i+1}:${s.weight}${s.unit||'kg'}×${s.reps}${rest}${memo}`;
+      return `${tag}${i+1}:${s.weight}${s.unit||'kg'}×${s.reps}${rest}`;
     }).join('　');
     return `
       <div class="ai-data-row">
