@@ -536,6 +536,40 @@ input[type="number"]::-webkit-outer-spin-button { display:none; }
   border: 1px solid rgba(124,58,237,0.18);
 }
 
+/* AIコメントカード */
+.ai-comment-card {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  background: linear-gradient(135deg, rgba(124,58,237,0.06) 0%, rgba(79,70,229,0.04) 100%);
+  border: 1px solid rgba(124,58,237,0.2);
+  border-radius: var(--r);
+  padding: 14px;
+  margin-bottom: 12px;
+  box-shadow: var(--shadow);
+}
+.ai-comment-icon {
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  background: rgba(124,58,237,0.12);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+.ai-comment-body { flex: 1; min-width: 0; }
+.ai-comment-label { font-family:'DM Mono',monospace; font-size: 10px; font-weight: 600; color: var(--accent-ai); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 4px; }
+.ai-comment-text { font-size: 13px; line-height: 1.7; color: var(--text); }
+
+/* 記録への転送プレビュー */
+.ai-transfer-note {
+  font-size: 11px;
+  color: var(--text-muted);
+  text-align: center;
+  margin-top: -8px;
+  margin-bottom: 16px;
+  line-height: 1.5;
+}
+
 /* エラー表示 */
 .ai-error {
   background: rgba(220,38,38,0.05);
@@ -673,6 +707,15 @@ input[type="number"]::-webkit-outer-spin-button { display:none; }
 
         <div class="ai-summary-bar" id="aiSummaryBar"></div>
 
+        <!-- AIコメント -->
+        <div class="ai-comment-card" id="aiCommentCard" style="display:none;">
+          <div class="ai-comment-icon">💬</div>
+          <div class="ai-comment-body">
+            <div class="ai-comment-label">AIコメント</div>
+            <div class="ai-comment-text" id="aiCommentText"></div>
+          </div>
+        </div>
+
         <!-- ウォームアップ -->
         <div class="ai-result-section warmup">
           <div class="ai-result-section-header">
@@ -716,6 +759,9 @@ input[type="number"]::-webkit-outer-spin-button { display:none; }
         </div>
 
       </div>
+
+      <!-- 転送時の注記 -->
+      <div class="ai-transfer-note" id="aiTransferNote" style="display:none;">「今日のトレーニングに追加する」を押すと、上記のAIコメントは1セット目のメモ欄にも転記されます</div>
 
       <!-- 今日のトレーニングに追加ボタン -->
       <button class="ai-add-to-record-btn" id="aiAddToRecordBtn" onclick="addAiResultToRecord()">
@@ -1632,6 +1678,9 @@ function resetAiResult() {
   document.getElementById('aiAddToRecordBtn').classList.remove('visible');
   document.getElementById('aiDataPreview').style.display = 'none';
   document.getElementById('aiRunBtn').disabled = true;
+  document.getElementById('aiCommentCard').style.display = 'none';
+  document.getElementById('aiCommentText').textContent = '';
+  document.getElementById('aiTransferNote').style.display = 'none';
   window._aiLastResult = null;
 }
 
@@ -1804,9 +1853,22 @@ function renderAiResult(exName, parsed, dataCount) {
     <span class="ai-summary-chip">🏷 ${exName}</span>
   `;
 
-  // サマリーテキストをメインセクションのsubtitleに反映
+  // AIコメント（適切なコメントとして目立つカードに表示）
+  const commentCard = document.getElementById('aiCommentCard');
+  const commentText = document.getElementById('aiCommentText');
+  const summaryText = (parsed.summary || '').trim();
+  if (summaryText) {
+    commentText.textContent = summaryText;
+    commentCard.style.display = 'flex';
+    document.getElementById('aiTransferNote').style.display = 'block';
+  } else {
+    commentCard.style.display = 'none';
+    document.getElementById('aiTransferNote').style.display = 'none';
+  }
+
+  // サマリーテキストをメインセクションのsubtitleにも反映（従来通り）
   const mainSubtitle = document.querySelector('.ai-result-section.main .ai-result-section-subtitle');
-  if (mainSubtitle && parsed.summary) mainSubtitle.textContent = parsed.summary;
+  if (mainSubtitle) mainSubtitle.textContent = summaryText || '今日の本番トレーニング';
 
   // ウォームアップカード（重量・回数のみ表示）
   const warmupCards = document.getElementById('warmupCards');
@@ -1887,25 +1949,32 @@ window.addAiResultToRecord = async () => {
     }
   }
 
+  // AIコメント（summary）を1セット目のメモとして転記する
+  const comment = (result.parsed.summary || '').trim();
+
   // ウォームアップ＋メインセットを結合してexerciseとして追加
-  const allSets = [
-    ...(result.parsed.warmup || []).map(s => ({
-      weight: s.weight,
-      reps: s.reps,
-      unit: s.unit || 'kg',
-      memo: '',
-      type: 'warmup',
-      restSec: ''
-    })),
-    ...(result.parsed.main || []).map(s => ({
-      weight: s.weight,
-      reps: s.reps,
-      unit: s.unit || 'kg',
-      memo: '',
-      type: 'main',
-      restSec: ''
-    }))
-  ];
+  const warmupSets = (result.parsed.warmup || []).map(s => ({
+    weight: s.weight,
+    reps: s.reps,
+    unit: s.unit || 'kg',
+    memo: '',
+    type: 'warmup',
+    restSec: ''
+  }));
+  const mainSets = (result.parsed.main || []).map(s => ({
+    weight: s.weight,
+    reps: s.reps,
+    unit: s.unit || 'kg',
+    memo: '',
+    type: 'main',
+    restSec: ''
+  }));
+  const allSets = [...warmupSets, ...mainSets];
+
+  // AIコメントは、ウォームアップがあればその1セット目、無ければメインの1セット目のメモ欄に転記
+  if (comment && allSets.length > 0) {
+    allSets[0].memo = `🤖 ${comment}`;
+  }
 
   // 同じ種目がすでにあれば上書き、なければ追加
   const existIdx = exercises.findIndex(ex => ex.name === result.exName);
@@ -1922,7 +1991,7 @@ window.addAiResultToRecord = async () => {
   // 記録ページへ移動
   await switchPage('record');
   renderRecord();
-  showToast(`「${result.exName}」を記録ページに追加しました`, 'ok');
+  showToast(`「${result.exName}」を記録ページに追加しました（AIコメントをメモに転記）`, 'ok');
 };
 
 // ===== ユーティリティ =====
